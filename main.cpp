@@ -1,7 +1,9 @@
 #include <iostream>
 #include <math.h>
+#include "solving_root_methods.h"
 
 double bisection(int, double, double, int, float, int);
+
 
 int main() {
 
@@ -17,8 +19,8 @@ int main() {
         std::cout << "Equation number: ";
         std::cin >> eq_num;
     }
-    int stopping_cond = 0, num_iterations;
-    float percent_error;
+    int stopping_cond = 0, num_iterations = -1;
+    float percent_error = 100.0;
 
     while (stopping_cond < 1 || stopping_cond > 2) {
         std::cout << "Please select the stopping condition: " << std::endl;
@@ -37,20 +39,30 @@ int main() {
     }
 
     ///DO: add x upper and lower as inputs?
-
+    // That would be cute!
 
     switch (eq_num) {
 
         case 1:
             std::cout << "xr: " << bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond) << std::endl;
+            //false_position arguments [eqn_num, xlower, xupper, n_iterations, percent_error.
+            false_position(eq_num, 0, 1, num_iterations, percent_error);
+            secant(eq_num, 0, 1, num_iterations, percent_error);
+            newton_raphson(eq_num, 0, num_iterations, percent_error);
             // call bisection, falsePos, secant, NewtonRaphson
             break;
         case 2:
             std::cout << "xr: " << bisection(eq_num, 0, -1, num_iterations, percent_error, stopping_cond) << std::endl;
+            false_position(eq_num, -1, 0, num_iterations, percent_error);
+            secant(eq_num, -1, 0, num_iterations, percent_error);
+            newton_raphson(eq_num, -1, num_iterations, percent_error);
             // call bisection, falsePos, secant, NewtonRaphson
             break;
         case 3:
             std::cout << "xr: " << bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond) << std::endl;
+            false_position(eq_num, 0, 1, num_iterations, percent_error);
+            secant(eq_num, 0, 1, num_iterations, percent_error);
+            newton_raphson(eq_num, 0, num_iterations, percent_error);
             // call bisection, falsePos, secant, NewtonRaphson
             break;
         case 4:
@@ -69,7 +81,7 @@ int main() {
 double bisection(int equation, double x_upper, double x_lower, int iterations, float percent, int stopping_cond) {
     double f_upper, f_lower, xr, fr, error = 100;
     double xr_old;
-    int i =0;
+    int i = 0;
 
     switch (equation) {
         case 1:
@@ -82,7 +94,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                     return -1; ///CHANGE?
                 }
 
-                if(i > 0)
+                if (i > 0)
                     xr_old = xr;
 
                 xr = (x_upper + x_lower) / 2;
@@ -93,7 +105,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                 else
                     x_lower = xr;
 
-                if(i > 0)
+                if (i > 0)
                     error = fabs((xr - xr_old) / xr) * 100;
                 i++;
 
@@ -102,52 +114,52 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
         case 2: //"2. f(x) = -12 -21x +18x^2 - 2.75x^3 "
 
             while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
-                    f_upper = -12 - 21 * x_upper + 18 * pow(x_upper, 2) - 2.75 * pow(x_upper, 3);
-                    f_lower = -12 - 21 * x_lower + 18 * pow(x_lower, 2) - 2.75 * pow(x_lower, 3);
-                    if (f_lower * f_upper > 0) {
-                        std::cout << "initial upper and lower limits are incorrect" << std::endl;
-                        return -1; ///CHANGE?
-                    }
-
-                    if(i > 0)
-                        xr_old = xr;
-
-                    xr = (x_upper + x_lower) / 2;
-                    fr = -12 - 21 * xr + 18 * pow(xr, 2) - 2.75 * pow(xr, 3);
-
-                    if (f_lower * fr < 0)
-                        x_upper = xr;
-                    else
-                        x_lower = xr;
-
-                if(i > 0)
-                    error = fabs((xr - xr_old) / xr) * 100;
-                i++;
-
-                }
-
-            break;
-        case 3: //"3. f(x) = 6x -4x^2 + 0.5x^3 -2 "
-            while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
-                f_upper = 6*x_upper - 4*pow(x_upper, 2) + 0.5*pow(x_upper, 3) -2;
-                f_lower = 6*x_lower - 4*pow(x_lower, 2) + 0.5*pow(x_lower, 3) -2;
+                f_upper = -12 - 21 * x_upper + 18 * pow(x_upper, 2) - 2.75 * pow(x_upper, 3);
+                f_lower = -12 - 21 * x_lower + 18 * pow(x_lower, 2) - 2.75 * pow(x_lower, 3);
                 if (f_lower * f_upper > 0) {
                     std::cout << "initial upper and lower limits are incorrect" << std::endl;
                     return -1; ///CHANGE?
                 }
 
-                if(i > 0)
+                if (i > 0)
                     xr_old = xr;
 
                 xr = (x_upper + x_lower) / 2;
-                fr = 6*xr - 4*pow(xr, 2) + 0.5*pow(xr, 3) -2;
+                fr = -12 - 21 * xr + 18 * pow(xr, 2) - 2.75 * pow(xr, 3);
 
                 if (f_lower * fr < 0)
                     x_upper = xr;
                 else
                     x_lower = xr;
 
-                if(i > 0)
+                if (i > 0)
+                    error = fabs((xr - xr_old) / xr) * 100;
+                i++;
+
+            }
+
+            break;
+        case 3: //"3. f(x) = 6x -4x^2 + 0.5x^3 -2 "
+            while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
+                f_upper = 6 * x_upper - 4 * pow(x_upper, 2) + 0.5 * pow(x_upper, 3) - 2;
+                f_lower = 6 * x_lower - 4 * pow(x_lower, 2) + 0.5 * pow(x_lower, 3) - 2;
+                if (f_lower * f_upper > 0) {
+                    std::cout << "initial upper and lower limits are incorrect" << std::endl;
+                    return -1; ///CHANGE?
+                }
+
+                if (i > 0)
+                    xr_old = xr;
+
+                xr = (x_upper + x_lower) / 2;
+                fr = 6 * xr - 4 * pow(xr, 2) + 0.5 * pow(xr, 3) - 2;
+
+                if (f_lower * fr < 0)
+                    x_upper = xr;
+                else
+                    x_lower = xr;
+
+                if (i > 0)
                     error = fabs((xr - xr_old) / xr) * 100;
                 i++;
 
@@ -163,7 +175,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                     return -1; ///CHANGE?
                 }
 
-                if(i > 0)
+                if (i > 0)
                     xr_old = xr;
 
                 xr = (x_upper + x_lower) / 2;
@@ -174,7 +186,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                 else
                     x_lower = xr;
 
-                if(i > 0)
+                if (i > 0)
                     error = fabs((xr - xr_old) / xr) * 100;
                 i++;
 
@@ -182,30 +194,29 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
             break;
         default: //"5. 7 sin(x) = e^x "
             while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
-                f_upper = 7*sin(x_upper) - exp(x_upper);
-                f_lower = 7*sin(x_lower) - exp(x_lower);
+                f_upper = 7 * sin(x_upper) - exp(x_upper);
+                f_lower = 7 * sin(x_lower) - exp(x_lower);
                 if (f_lower * f_upper > 0) {
                     std::cout << "initial upper and lower limits are incorrect" << std::endl;
                     return -1; ///CHANGE?
                 }
 
-                if(i > 0)
+                if (i > 0)
                     xr_old = xr;
 
                 xr = (x_upper + x_lower) / 2;
-                fr = 7*sin(xr) - exp(xr);
+                fr = 7 * sin(xr) - exp(xr);
 
                 if (f_lower * fr < 0)
                     x_upper = xr;
                 else
                     x_lower = xr;
 
-                if(i > 0)
+                if (i > 0)
                     error = fabs((xr - xr_old) / xr) * 100;
                 i++;
 
             }
-
 
 
     }
