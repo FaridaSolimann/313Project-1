@@ -2,7 +2,7 @@
 #include <math.h>
 #include "solving_root_methods.h"
 
-double bisection(int, double, double, int, float, int);
+void bisection(int, double, double, int, float, int);
 
 
 int main() {
@@ -44,7 +44,7 @@ int main() {
     switch (eq_num) {
 
         case 1:
-            std::cout << "xr: " << bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond) << std::endl;
+            bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond);
             //false_position arguments [eqn_num, xlower, xupper, n_iterations, percent_error.
             false_position(eq_num, 0, 1, num_iterations, percent_error);
             secant(eq_num, 0, 1, num_iterations, percent_error);
@@ -52,25 +52,25 @@ int main() {
             // call bisection, falsePos, secant, NewtonRaphson
             break;
         case 2:
-            std::cout << "xr: " << bisection(eq_num, 0, -1, num_iterations, percent_error, stopping_cond) << std::endl;
+            bisection(eq_num, 0, -1, num_iterations, percent_error, stopping_cond);
             false_position(eq_num, -1, 0, num_iterations, percent_error);
             secant(eq_num, -1, 0, num_iterations, percent_error);
             newton_raphson(eq_num, -1, num_iterations, percent_error);
             // call bisection, falsePos, secant, NewtonRaphson
             break;
         case 3:
-            std::cout << "xr: " << bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond) << std::endl;
+            bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond);
             false_position(eq_num, 0, 1, num_iterations, percent_error);
             secant(eq_num, 0, 1, num_iterations, percent_error);
             newton_raphson(eq_num, 0, num_iterations, percent_error);
             // call bisection, falsePos, secant, NewtonRaphson
             break;
         case 4:
-            std::cout << "xr: " << bisection(eq_num, -1, -2, num_iterations, percent_error, stopping_cond) << std::endl;
+            bisection(eq_num, -1, -2, num_iterations, percent_error, stopping_cond);
             // call bisection
             break;
         default:;
-            std::cout << "xr: " << bisection(eq_num, 2, 1, num_iterations, percent_error, stopping_cond) << std::endl;
+            bisection(eq_num, 2, 1, num_iterations, percent_error, stopping_cond);
 
             // call bisection
 
@@ -78,8 +78,9 @@ int main() {
     return 0;
 }
 
-double bisection(int equation, double x_upper, double x_lower, int iterations, float percent, int stopping_cond) {
-    double f_upper, f_lower, xr, fr, error = 100;
+void bisection(int equation, double x_upper, double x_lower, int iterations, float percent, int stopping_cond) {
+    double f_upper, f_lower, xr, fr;
+    long double error = 100;
     double xr_old;
     int i = 0;
 
@@ -91,7 +92,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                 f_lower = pow(x_lower, 3) - 8 * pow(x_lower, 2) + 12 * x_lower - 4;
                 if (f_lower * f_upper > 0) {
                     std::cout << "initial upper and lower limits are incorrect" << std::endl;
-                    return -1; ///CHANGE?
+                    return; ///CHANGE?
                 }
 
                 if (i > 0)
@@ -118,7 +119,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                 f_lower = -12 - 21 * x_lower + 18 * pow(x_lower, 2) - 2.75 * pow(x_lower, 3);
                 if (f_lower * f_upper > 0) {
                     std::cout << "initial upper and lower limits are incorrect" << std::endl;
-                    return -1; ///CHANGE?
+                    return; ///CHANGE?
                 }
 
                 if (i > 0)
@@ -145,7 +146,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                 f_lower = 6 * x_lower - 4 * pow(x_lower, 2) + 0.5 * pow(x_lower, 3) - 2;
                 if (f_lower * f_upper > 0) {
                     std::cout << "initial upper and lower limits are incorrect" << std::endl;
-                    return -1; ///CHANGE?
+                    return; ///CHANGE?
                 }
 
                 if (i > 0)
@@ -172,7 +173,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                 f_lower = log(pow(x_lower, 4)) - 0.7;
                 if (f_lower * f_upper > 0) {
                     std::cout << "initial upper and lower limits are incorrect" << std::endl;
-                    return -1; ///CHANGE?
+                    return; ///CHANGE?
                 }
 
                 if (i > 0)
@@ -198,7 +199,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
                 f_lower = 7 * sin(x_lower) - exp(x_lower);
                 if (f_lower * f_upper > 0) {
                     std::cout << "initial upper and lower limits are incorrect" << std::endl;
-                    return -1; ///CHANGE?
+                    return; ///CHANGE?
                 }
 
                 if (i > 0)
@@ -220,7 +221,7 @@ double bisection(int equation, double x_upper, double x_lower, int iterations, f
 
 
     }
-
-    return xr;
+    printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
+           error);
 
 }
