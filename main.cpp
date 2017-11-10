@@ -16,6 +16,7 @@ int main() {
         std::cout << "3. f(x) = 6x -4x^2 + 0.5x^3 -2 " << std::endl; // multiple roots
         std::cout << "4. ln(x^4) = 0.7 " << std::endl;
         std::cout << "5. 7 sin(x) = e^x " << std::endl;
+        std::cout << "6. [Part2] y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x) [Solving with Newton-Raphson]" << std::endl;
         std::cout << "Equation number: ";
         std::cin >> eq_num;
     }
@@ -38,41 +39,47 @@ int main() {
 
     }
 
-    ///DO: add x upper and lower as inputs?
+    //TODO: add x upper and lower as inputs?
     // That would be cute!
 
     switch (eq_num) {
 
-        case 1:
+        case 1: //1. x^3 - 8x^2 +12x = 4
             bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond);
-            //false_position arguments [eqn_num, xlower, xupper, n_iterations, percent_error.
-            false_position(eq_num, 0, 1, num_iterations, percent_error);
-            secant(eq_num, 0, 1, num_iterations, percent_error);
-            newton_raphson(eq_num, 0, num_iterations, percent_error);
-            // call bisection, falsePos, secant, NewtonRaphson
+            false_position(eq_num, 0, 1, num_iterations, percent_error, stopping_cond);
+            secant(eq_num, 0, 1, num_iterations, percent_error, stopping_cond);
+            newton_raphson(eq_num, 0, num_iterations, percent_error, stopping_cond);
             break;
-        case 2:
+
+        case 2: //2. f(x) = -12 -21x +18x^2 - 2.75x^3
             bisection(eq_num, 0, -1, num_iterations, percent_error, stopping_cond);
-            false_position(eq_num, -1, 0, num_iterations, percent_error);
-            secant(eq_num, -1, 0, num_iterations, percent_error);
-            newton_raphson(eq_num, -1, num_iterations, percent_error);
-            // call bisection, falsePos, secant, NewtonRaphson
+            false_position(eq_num, -1, 0, num_iterations, percent_error, stopping_cond);
+            secant(eq_num, -1, 0, num_iterations, percent_error, stopping_cond);
+            newton_raphson(eq_num, -1, num_iterations, percent_error, stopping_cond);
             break;
-        case 3:
+
+        case 3: //3. f(x) = 6x -4x^2 + 0.5x^3 -2
             bisection(eq_num, 1, 0, num_iterations, percent_error, stopping_cond);
-            false_position(eq_num, 0, 1, num_iterations, percent_error);
-            secant(eq_num, 0, 1, num_iterations, percent_error);
-            newton_raphson(eq_num, 0, num_iterations, percent_error);
-            // call bisection, falsePos, secant, NewtonRaphson
+            false_position(eq_num, 0, 1, num_iterations, percent_error, stopping_cond);
+            secant(eq_num, 0, 1, num_iterations, percent_error, stopping_cond);
+            newton_raphson(eq_num, 0, num_iterations, percent_error, stopping_cond);
             break;
-        case 4:
+
+        case 4: //4. ln(x^4) = 0.7
             bisection(eq_num, -1, -2, num_iterations, percent_error, stopping_cond);
             // call bisection
             break;
-        default:;
-            bisection(eq_num, 2, 1, num_iterations, percent_error, stopping_cond);
 
-            // call bisection
+        case 5: //5. 7 sin(x) = e^x
+            bisection(eq_num, 2, 1, num_iterations, percent_error, stopping_cond);
+            break;
+
+        case 6: //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
+            newton_raphson(eq_num, 0, num_iterations, percent_error, stopping_cond);
+            break;
+
+        default:
+            std::cout << "Invalid Eq Number." << std::endl;
 
     }
     return 0;
