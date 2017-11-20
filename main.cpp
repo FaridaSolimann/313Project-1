@@ -165,7 +165,6 @@ void bisection(int equation, double x_upper, double x_lower, int iterations, flo
                 i++;
 
             }
-
             break;
         case 4:
             while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
@@ -216,10 +215,7 @@ void bisection(int equation, double x_upper, double x_lower, int iterations, flo
                 if (i > 0)
                     error = fabs((xr - xr_old) / xr) * 100;
                 i++;
-
             }
-
-
     }
     printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
            error);
