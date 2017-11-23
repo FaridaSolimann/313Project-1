@@ -1,7 +1,6 @@
 #include <iostream>
 #include "solving_root_methods.h"
 
-
 int main() {
 
     int eq_num = 0;
