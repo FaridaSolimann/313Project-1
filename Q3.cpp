@@ -47,7 +47,7 @@ void gauss_jordan_method() {
         p = 0;
         for (int i = j; i < N - 1; i++) {
             int sign = 1;
-            // make A[i][M] the pivot.
+            // make A[i][j] the pivot.
             double a = A[i + 1][j] / A[i - p][j];
             if ((a + A[i + 1][j]) > 0 || (a + A[i + 1][j]) < 0)
                 sign = -1;
@@ -58,12 +58,12 @@ void gauss_jordan_method() {
         }
     }
 
-    //Reducing Bottom-Top
+    // Reducing Bottom-Top
     for (int j = M - 2; j > 0; j--) {
         p = 0;
         for (int i = j; i > 0; i--) {
             int sign = 1;
-            //make A[i][M] the pivot.
+            //make A[i][j] the pivot.
             double a = A[i - 1][j] / A[i + p][j];
             if ((a + A[i - 1][j] > 0) || (a + A[i - 1][j] < 0))
                 sign = -1;

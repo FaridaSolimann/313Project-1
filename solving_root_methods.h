@@ -6,19 +6,25 @@
 
 //TODO: use long double instead of double! (bug occurs at 0.00000%)
 
-void bisection(int, double, double, int, float, int);
+void bisection(int EQ_i, int iters, float percent, int stopping_cond);
 
-void false_position(int EQ_i, double x_l, double x_u, int iters, double percent, int stopping_condition);
+void false_position(int EQ_i, int iters, double percent, int stopping_condition);
 
-void secant(int EQ_i, double x_i_0, double x_i_1, int iters, double percent, int stopping_condition);
+void secant(int EQ_i, int iters, double percent, int stopping_condition);
 
-void newton_raphson(int EQ_i, double x_i_1, int iters, double percent, int stopping_condition);
+void newton_raphson(int EQ_i, int iters, double percent, int stopping_condition);
 
-void bisection(int equation, double x_upper, double x_lower, int iterations, float percent, int stopping_cond) {
+void bisection(int equation, int iterations, float percent, int stopping_cond) {
+
     double f_upper, f_lower, xr, fr;
+    double x_upper, x_lower;
     long double error = 100;
     double xr_old;
     int i = 0;
+    std::cout << "Enter X lower value: ";
+    std::cin >> x_lower;
+    std::cout << "Enter X upper value: ";
+    std::cin >> x_upper;
 
     switch (equation) {
         case 1:
@@ -157,10 +163,17 @@ void bisection(int equation, double x_upper, double x_lower, int iterations, flo
            error);
 
 }
-void false_position(int EQ_i, double x_l, double x_u, int iters, double percent, int stopping_condition) {
+
+void false_position(int EQ_i, int iters, double percent, int stopping_condition) {
+
     int i = 0;
+    double x_l, x_u;
     double func_xl, func_xu, func_xr, xr = 0.0, xr_old = 0.0;
     long double root_error = 100.0;
+    std::cout << "Enter X lower value: ";
+    std::cin >> x_l;
+    std::cout << "Enter X upper value: ";
+    std::cin >> x_u;
 
     switch (EQ_i) {
         case 1:
@@ -235,10 +248,15 @@ void false_position(int EQ_i, double x_l, double x_u, int iters, double percent,
     }
 }
 
-void secant(int EQ_i, double x_i_0, double x_i_1, int iters, double percent, int stopping_condition) {
+void secant(int EQ_i, int iters, double percent, int stopping_condition) {
     int i = 0;
+    double x_i_0, x_i_1;
     double func_xi0, func_xi1, x_i_2 = 0.0;
     long double root_error = 100.0;
+    std::cout << "Enter first initial guess (Xo): ";
+    std::cin >> x_i_0;
+    std::cout << "Enter second initial guess (x1): ";
+    std::cin >> x_i_1;
 
     switch (EQ_i) {
         case 1:
@@ -299,10 +317,13 @@ void secant(int EQ_i, double x_i_0, double x_i_1, int iters, double percent, int
     }
 }
 
-void newton_raphson(int EQ_i, double x_i_1, int iters, double percent, int stopping_condition) {
+void newton_raphson(int EQ_i, int iters, double percent, int stopping_condition) {
     int i = 0;
+    double x_i_1;
     double func_xi1, dx_func_xi1, x_i_2 = 0.0;
     long double root_error = 100.0;
+    std::cout << "Enter initial guess: ";
+    std::cin >> x_i_1;
 
     switch (EQ_i) {
         case 1:
@@ -319,7 +340,6 @@ void newton_raphson(int EQ_i, double x_i_1, int iters, double percent, int stopp
                 x_i_1 = x_i_2;
                 i++;
             }
-//            std::cout<< x_i_2 << " || " << x_i_1 <<std::endl;       //for debugging.
             printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
                    root_error);
             break;
@@ -339,7 +359,6 @@ void newton_raphson(int EQ_i, double x_i_1, int iters, double percent, int stopp
                 x_i_1 = x_i_2;
                 i++;
             }
-//            std::cout<< x_i_2 << " || " << x_i_1 <<std::endl;       //for debugging.
             printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
                    root_error);
             break;
@@ -358,31 +377,30 @@ void newton_raphson(int EQ_i, double x_i_1, int iters, double percent, int stopp
                 x_i_1 = x_i_2;
                 i++;
             }
-//            std::cout<< x_i_2 << " || " << x_i_1 <<std::endl;       //for debugging.
             printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
                    root_error);
             break;
 
-        case 6:
-            //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
-            //dy/dx = (2.5/120*50000*30000*100)(-x^5 + 2*100^2x^3 - 100^4x)
-            int L = 100, E = 50000, I = 30000;
-            double w0 = 2.5;
-
-            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
-                func_xi1 = 0;
-                dx_func_xi1 = 0;
-                //Newton-Raphson equation.
-                x_i_2 = x_i_1 - (func_xi1 / dx_func_xi1);
-
-                root_error = fabs(((x_i_2 - x_i_1) / x_i_2) * 100);
-
-                x_i_1 = x_i_2;
-                i++;
-            }
-//            std::cout<< x_i_2 << " || " << x_i_1 <<std::endl;       //for debugging.
-            printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
-                   root_error);
+//        case 6:
+//            //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
+//            //dy/dx = (2.5/120*50000*30000*100)(-x^5 + 2*100^2x^3 - 100^4x)
+//            int L = 100, E = 50000, I = 30000;
+//            double w0 = 2.5;
+//
+//            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
+//                func_xi1 = 0;
+//                dx_func_xi1 = 0;
+//                //Newton-Raphson equation.
+//                x_i_2 = x_i_1 - (func_xi1 / dx_func_xi1);
+//
+//                root_error = fabs(((x_i_2 - x_i_1) / x_i_2) * 100);
+//
+//                x_i_1 = x_i_2;
+//                i++;
+//            }
+////            std::cout<< x_i_2 << " || " << x_i_1 <<std::endl;       //for debugging.
+//            printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
+//                   root_error);
 
         default:
             std::cout << "Default" << std::endl;
