@@ -15,7 +15,7 @@ int main() {
         std::cout << "3. f(x) = 6x -4x^2 + 0.5x^3 -2 " << std::endl; // multiple roots
         std::cout << "4. ln(x^4) = 0.7 " << std::endl;
         std::cout << "5. 7 sin(x) = e^x " << std::endl;
-        std::cout << "6. [Part2] y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x) [Solving with Newton-Raphson method]"
+        std::cout << "6. [Part2] y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x) [Solving with False-position method]"
                   << std::endl;
         std::cout << "Equation number: ";
         std::cin >> eq_num;
@@ -73,11 +73,9 @@ int main() {
             break;
 
         case 6: //  y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
-            //  dy/dx = (Wo/120EIL)(-4x^4 + 6*L^2x^2 - L^4) = 0
-            //  -4x^4 + 60,000x^2 - 100,000,000 = 0
-            // let z = x^2, then -4z^2 + 60,000z - 100,000,000 = 0
+            //  dy/dx = (Wo/120EIL)(-5x^4 + 6*L^2x^2 - L^4) = 0
             point_of_max_deflection();
-            newton_raphson(eq_num, num_iterations, percent_error, stopping_cond);
+            false_position(eq_num, num_iterations, percent_error, stopping_cond);
             break;
 
         default:

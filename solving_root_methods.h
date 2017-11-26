@@ -168,8 +168,9 @@ void false_position(int EQ_i, int iters, double percent, int stopping_condition)
 
     int i = 0;
     double x_l, x_u;
-    double func_xl, func_xu, func_xr, xr = 0.0, xr_old = 0.0;
+    double func_xl, func_xu, func_xr, xr = 0.0, xr_old = 0.0, L = 100.0;
     long double root_error = 100.0;
+    long double _6_func_xl, _6_func_xu, _6_func_xr, _6_xr = 0.0, _6_xr_old = 0.0, _6_xu, _6_xl;
     std::cout << "Enter X lower value: ";
     std::cin >> x_l;
     std::cout << "Enter X upper value: ";
@@ -285,7 +286,29 @@ void false_position(int EQ_i, int iters, double percent, int stopping_condition)
             printf("[False Position] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
                    root_error);
             break;
+        case 6:
+//            //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
+            _6_xu = x_u;
+            _6_xl = x_l;
+            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
+                //False-Position equation.
+                _6_func_xl = -1.0 * powl(_6_xl, 5) + ((2 * powl(L, 2)) * powl(_6_xl, 3)) - (powl(L, 4) * _6_xl);
+                _6_func_xu = -1.0 * powl(-1.0 * _6_xu, 5) + ((2 * powl(L, 2)) * powl(_6_xu, 3)) - (powl(L, 4) * _6_xu);
+                _6_xr = _6_xu - ((_6_func_xu * (_6_xl - _6_xu))) / (_6_func_xl - _6_func_xu);
+                _6_func_xr = -1.0 * powl(_6_xr, 5) + ((2 * powl(L, 2)) * powl(_6_xr, 3)) - (powl(L, 4) * _6_xr);
 
+                // Check region where root lies. f(xl)f(xr) < 0 then xu = xr
+                _6_func_xl * _6_func_xr < 0.0 ? _6_xu = _6_xr : _6_xl = _6_xr;
+
+                if (i > 0)
+                    root_error = fabsl(((_6_xr - _6_xr_old) / _6_xr) * 100.0);
+
+                _6_xr_old = _6_xr;
+                i++;
+            }
+            printf("[False Position] Method -> Xr: %Lf | iterations: %d | relative error: %Lf%% \n", _6_xr, i,
+                   root_error);
+            break;
 
         default:
             std::cout << "Default" << std::endl;
@@ -370,10 +393,6 @@ void newton_raphson(int EQ_i, int iters, double percent, int stopping_condition)
     std::cout << "Enter initial guess: ";
     std::cin >> x_i_1;
 
-    int L = 100, E = 50000, I = 30000;
-    double w0 = 2.5;
-    long double _6_func_xi1, _6_dx_func_xi1, _6_x_i_2 = 0.0;
-
     switch (EQ_i) {
         case 1:
             // f(x) = X^3 - 8X^2 + 12X - 4
@@ -430,27 +449,24 @@ void newton_raphson(int EQ_i, int iters, double percent, int stopping_condition)
                    root_error);
             break;
 
-        case 6:
-            //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
-            //dy/dx = (2.5/120*50000*30000*100)(-5x^4 + 6*100^2x^2 - 100^4)
-
-            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
-                _6_func_xi1 = (w0 / E * I * L) *
-                              ((-1 * powl(x_i_1, 5)) + (2 * pow(L, 2) * powl(x_i_1, 3)) - pow(L, 4) * x_i_1);
-                _6_dx_func_xi1 =
-                        (w0 / E * I * L) * ((-5 * powl(x_i_1, 4)) + (6 * pow(L, 2) * powl(x_i_1, 2)) - pow(L, 4));
-                //Newton-Raphson equation.
-                _6_x_i_2 = x_i_1 - (_6_func_xi1 / _6_dx_func_xi1);
-
-                root_error = fabsl(((_6_x_i_2 - x_i_1) / _6_x_i_2) * 100);
-
-                x_i_1 = x_i_2;
-                i++;
-            }
-//            std::cout<< x_i_2 << " || " << x_i_1 <<std::endl;       //for debugging.
-            printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
-                   root_error);
-            break;
+//        case 6:
+//            //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
+//            //dy/dx = (2.5/120*50000*30000*100)(-5x^4 + 6*100^2x^2 - 100^4)
+////            (w0 / E * I * L)
+//            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
+//                _6_func_xi1 = ((-1 * powl(x_i_1, 5)) + (2 * pow(L, 2) * powl(x_i_1, 3)) - pow(L, 4) * x_i_1);
+//                _6_dx_func_xi1 = ((-5 * powl(x_i_1, 4)) + (6 * pow(L, 2) * powl(x_i_1, 2)) - pow(L, 4));
+//                //Newton-Raphson equation.
+//                _6_x_i_2 = x_i_1 - (_6_func_xi1 / _6_dx_func_xi1);
+//
+//                root_error = fabsl(((_6_x_i_2 - x_i_1) / _6_x_i_2) * 100);
+//
+//                x_i_1 = x_i_2;
+//                i++;
+//            }
+//            printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
+//                   root_error);
+//            break;
 
         default:
             std::cout << "Default" << std::endl;
