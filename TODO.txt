@@ -1,8 +1,0 @@
--- False-position method implemented on
-EQ 1, 2, 3
-
--- Secant method implemented on
-EQ 1, 2, 3
-
--- Newton-Raphson implemented on
-EQ 1, 2, 3

@@ -64,12 +64,12 @@ int main() {
 
         case 4: //4. ln(x^4) = 0.7
             bisection(eq_num, num_iterations, percent_error, stopping_cond);
-            //TODO: call false-position here.
+            false_position(eq_num, num_iterations, percent_error, stopping_cond);
             break;
 
         case 5: //5. 7 sin(x) = e^x
             bisection(eq_num, num_iterations, percent_error, stopping_cond);
-            //TODO: call false-position here.
+            false_position(eq_num, num_iterations, percent_error, stopping_cond);
             break;
 
         case 6: //  y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
@@ -88,7 +88,7 @@ int main() {
 }
 
 void point_of_max_deflection() {
-    long double a = -4, b = 60000, c = -100000000;
+    long double a = -5, b = 60000, c = -100000000;
     long double z1, z2, x1, x2;
     long double discriminant = powl(b, 2) - 4 * a * c;
 
@@ -97,9 +97,9 @@ void point_of_max_deflection() {
     z2 = (-1 * b - sqrtl(discriminant)) / (2 * a);
 
     std::cout << "~~~~~~ Determining the point of maximum deflection (value of x where dy/dx = 0) ~~~~~~" << std::endl;
-    std::cout << "dy/dx = (Wo/120EIL)(-4x^4 + 6*L^2x^2 - L^4) = 0" << std::endl;
+    std::cout << "dy/dx = (Wo/120EIL)(-5x^4 + 6*L^2x^2 - L^4) = 0" << std::endl;
     std::cout << "Letting Z = X^2 ... " << std::endl;
-    std::cout << "-4*Z^2 + 60,000*Z - 100,000,000 = 0" << std::endl;
+    std::cout << "-5*Z^2 + 60,000*Z - 100,000,000 = 0" << std::endl;
     printf("Therefore possible solutions for z...\n 1. z = %Lf \n 2. z = %Lf \n", z1, z2);
     x1 = sqrtl(fabsl(z1)), x2 = sqrtl(fabsl(z2));
     printf("Possible solutions for X where X = sqrt(Z)...\n 1. x = %Lf \n 2. x = %Lf \n 3. x = %Lf \n 4. x = %Lf \n",
