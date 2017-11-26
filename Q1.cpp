@@ -15,7 +15,7 @@ int main() {
         std::cout << "3. f(x) = 6x -4x^2 + 0.5x^3 -2 " << std::endl; // multiple roots
         std::cout << "4. ln(x^4) = 0.7 " << std::endl;
         std::cout << "5. 7 sin(x) = e^x " << std::endl;
-        std::cout << "6. [Part2] y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x) [Solving with False-position method]"
+        std::cout << "6. [Part2] y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x) [Solving with Bisection method]"
                   << std::endl;
         std::cout << "Equation number: ";
         std::cin >> eq_num;
@@ -65,17 +65,20 @@ int main() {
         case 4: //4. ln(x^4) = 0.7
             bisection(eq_num, num_iterations, percent_error, stopping_cond);
             false_position(eq_num, num_iterations, percent_error, stopping_cond);
+            secant(eq_num, num_iterations, percent_error, stopping_cond);
+            newton_raphson(eq_num, num_iterations, percent_error, stopping_cond);
             break;
 
         case 5: //5. 7 sin(x) = e^x
             bisection(eq_num, num_iterations, percent_error, stopping_cond);
             false_position(eq_num, num_iterations, percent_error, stopping_cond);
+            secant(eq_num, num_iterations, percent_error, stopping_cond);
+            newton_raphson(eq_num, num_iterations, percent_error, stopping_cond);
             break;
 
         case 6: //  y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
             //  dy/dx = (Wo/120EIL)(-5x^4 + 6*L^2x^2 - L^4) = 0
-            point_of_max_deflection();
-            false_position(eq_num, num_iterations, percent_error, stopping_cond);
+            bisection(eq_num, num_iterations, percent_error, stopping_cond);
             break;
 
         default:
@@ -86,7 +89,7 @@ int main() {
 }
 
 void point_of_max_deflection() {
-    long double a = -5, b = 60000, c = -100000000;
+    long double a = -5.0 / 2160000, b = 1, c = -1 * 60000;
     long double z1, z2, x1, x2;
     long double discriminant = powl(b, 2) - 4 * a * c;
 
@@ -95,9 +98,9 @@ void point_of_max_deflection() {
     z2 = (-1 * b - sqrtl(discriminant)) / (2 * a);
 
     std::cout << "~~~~~~ Determining the point of maximum deflection (value of x where dy/dx = 0) ~~~~~~" << std::endl;
-    std::cout << "dy/dx = (Wo/120EIL)(-5x^4 + 6*L^2x^2 - L^4) = 0" << std::endl;
+    std::cout << "dy/dx = ((-5/2160000)x^4 + x^2 - 60000) = 0" << std::endl;
     std::cout << "Letting Z = X^2 ... " << std::endl;
-    std::cout << "-5*Z^2 + 60,000*Z - 100,000,000 = 0" << std::endl;
+    std::cout << "(-5/60000)Z^2 + Z - 60000 = 0" << std::endl;
     printf("Therefore possible solutions for z...\n 1. z = %Lf \n 2. z = %Lf \n", z1, z2);
     x1 = sqrtl(fabsl(z1)), x2 = sqrtl(fabsl(z2));
     printf("Possible solutions for X where X = sqrt(Z)...\n 1. x = %Lf \n 2. x = %Lf \n 3. x = %Lf \n 4. x = %Lf \n",

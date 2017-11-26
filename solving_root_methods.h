@@ -4,7 +4,6 @@
 #include <iostream>
 #include <math.h>
 
-//TODO: use long double instead of double! (bug occurs at 0.00000%)
 
 void bisection(int EQ_i, int iters, float percent, int stopping_cond);
 
@@ -21,6 +20,8 @@ void bisection(int equation, int iterations, float percent, int stopping_cond) {
     long double error = 100;
     double xr_old;
     int i = 0;
+    long double _6_func_xl, _6_func_xu, _6_func_xr, _6_xr = 0.0, _6_xr_old = 0.0, _6_xu, _6_xl;
+    double long y;
     std::cout << "Enter X lower value: ";
     std::cin >> x_lower;
     std::cout << "Enter X upper value: ";
@@ -53,6 +54,8 @@ void bisection(int equation, int iterations, float percent, int stopping_cond) {
                 i++;
 
             }
+            printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
+                   error);
             break;
         case 2: //"2. f(x) = -12 -21x +18x^2 - 2.75x^3 "
 
@@ -80,7 +83,8 @@ void bisection(int equation, int iterations, float percent, int stopping_cond) {
                 i++;
 
             }
-
+            printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
+                   error);
             break;
         case 3: //"3. f(x) = 6x -4x^2 + 0.5x^3 -2 "
             while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
@@ -107,6 +111,8 @@ void bisection(int equation, int iterations, float percent, int stopping_cond) {
                 i++;
 
             }
+            printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
+                   error);
             break;
         case 4:
             while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
@@ -133,7 +139,47 @@ void bisection(int equation, int iterations, float percent, int stopping_cond) {
                 i++;
 
             }
+            printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
+                   error);
             break;
+
+        case 6:
+            //dy/dx = (-5/216000x^4 + x^2 - 60000)
+            _6_xu = x_upper;
+            _6_xl = x_lower;
+            while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
+                _6_func_xl = (-5.0 / 2160000) * powl(_6_xl, 4) + powl(_6_xl, 2) - (60000);
+                _6_func_xu = (-5.0 / 2160000) * powl(_6_xu, 4) + powl(_6_xu, 2) - (60000);
+
+                if (_6_func_xl * _6_func_xu > 0) {
+                    std::cout << "initial upper and lower limits are incorrect" << std::endl;
+                    return; ///CHANGE?
+                }
+
+                if (i > 0)
+                    _6_xr_old = _6_xr;
+
+                _6_xr = (_6_xu + _6_xl) / 2.0;
+                _6_func_xr = (-5.0 / 2160000) * powl(_6_xr, 4) + powl(_6_xr, 2) - (60000);
+
+                if (_6_func_xl * _6_func_xr < 0.0)
+                    _6_xu = _6_xr;
+                else
+                    _6_xl = _6_xr;
+
+                if (i > 0)
+                    error = fabsl((_6_xr - _6_xr_old) / _6_xr) * 100.0;
+                i++;
+
+            }
+            //  y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
+            y = ((2.5) / (50000 * 30000 * 600 * 120) *
+                 ((-1.0 / 720000) * powl(_6_xr, 5) + powl(_6_xr, 3) - 180000 * _6_xr));
+            printf("[Bisection] Method -> Xr: %Lf | maximum deflection (y): %Lf | iterations: %d | relative error: %Lf%% \n",
+                   _6_xr, y, i,
+                   error);
+            break;
+
         default: //"5. 7 sin(x) = e^x "
             while ((stopping_cond == 1 && i < iterations) || (stopping_cond == 2 && error > percent)) {
                 f_upper = 7 * sin(x_upper) - exp(x_upper);
@@ -158,9 +204,10 @@ void bisection(int equation, int iterations, float percent, int stopping_cond) {
                     error = fabs((xr - xr_old) / xr) * 100;
                 i++;
             }
+            printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
+                   error);
+            break;
     }
-    printf("[Bisection] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
-           error);
 
 }
 
@@ -168,9 +215,8 @@ void false_position(int EQ_i, int iters, double percent, int stopping_condition)
 
     int i = 0;
     double x_l, x_u;
-    double func_xl, func_xu, func_xr, xr = 0.0, xr_old = 0.0, L = 100.0;
+    double func_xl, func_xu, func_xr, xr = 0.0, xr_old = 0.0;
     long double root_error = 100.0;
-    long double _6_func_xl, _6_func_xu, _6_func_xr, _6_xr = 0.0, _6_xr_old = 0.0, _6_xu, _6_xl;
     std::cout << "Enter X lower value: ";
     std::cin >> x_l;
     std::cout << "Enter X upper value: ";
@@ -286,29 +332,6 @@ void false_position(int EQ_i, int iters, double percent, int stopping_condition)
             printf("[False Position] Method -> Xr: %f | iterations: %d | relative error: %Lf%% \n", xr, i,
                    root_error);
             break;
-        case 6:
-//            //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
-            _6_xu = x_u;
-            _6_xl = x_l;
-            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
-                //False-Position equation.
-                _6_func_xl = -1.0 * powl(_6_xl, 5) + ((2 * powl(L, 2)) * powl(_6_xl, 3)) - (powl(L, 4) * _6_xl);
-                _6_func_xu = -1.0 * powl(-1.0 * _6_xu, 5) + ((2 * powl(L, 2)) * powl(_6_xu, 3)) - (powl(L, 4) * _6_xu);
-                _6_xr = _6_xu - ((_6_func_xu * (_6_xl - _6_xu))) / (_6_func_xl - _6_func_xu);
-                _6_func_xr = -1.0 * powl(_6_xr, 5) + ((2 * powl(L, 2)) * powl(_6_xr, 3)) - (powl(L, 4) * _6_xr);
-
-                // Check region where root lies. f(xl)f(xr) < 0 then xu = xr
-                _6_func_xl * _6_func_xr < 0.0 ? _6_xu = _6_xr : _6_xl = _6_xr;
-
-                if (i > 0)
-                    root_error = fabsl(((_6_xr - _6_xr_old) / _6_xr) * 100.0);
-
-                _6_xr_old = _6_xr;
-                i++;
-            }
-            printf("[False Position] Method -> Xr: %Lf | iterations: %d | relative error: %Lf%% \n", _6_xr, i,
-                   root_error);
-            break;
 
         default:
             std::cout << "Default" << std::endl;
@@ -367,6 +390,40 @@ void secant(int EQ_i, int iters, double percent, int stopping_condition) {
             while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
                 func_xi0 = 6 * x_i_0 - 4 * pow(x_i_0, 2) + 0.5 * pow(x_i_0, 3) - 2;
                 func_xi1 = 6 * x_i_1 - 4 * pow(x_i_1, 2) + 0.5 * pow(x_i_1, 3) - 2;
+                //Secant equation.
+                x_i_2 = x_i_1 - ((func_xi1 * (x_i_0 - x_i_1))) / (func_xi0 - func_xi1);
+
+                root_error = fabs(((x_i_2 - x_i_1) / x_i_2) * 100);
+
+                x_i_0 = x_i_1;
+                x_i_1 = x_i_2;
+                i++;
+            }
+            printf("[Secant] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i, root_error);
+            break;
+
+        case 4:
+            //ln(x^4) = 0.7
+            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
+                func_xi0 = log(pow(x_i_0, 4)) - 0.7;
+                func_xi1 = log(pow(x_i_1, 4)) - 0.7;
+                //Secant equation.
+                x_i_2 = x_i_1 - ((func_xi1 * (x_i_0 - x_i_1))) / (func_xi0 - func_xi1);
+
+                root_error = fabs(((x_i_2 - x_i_1) / x_i_2) * 100);
+
+                x_i_0 = x_i_1;
+                x_i_1 = x_i_2;
+                i++;
+            }
+            printf("[Secant] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i, root_error);
+            break;
+
+        case 5:
+            //7sin(x) = e^x
+            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
+                func_xi0 = 7 * sin(x_i_0) - exp(x_i_0);
+                func_xi1 = 7 * sin(x_i_1) - exp(x_i_1);
                 //Secant equation.
                 x_i_2 = x_i_1 - ((func_xi1 * (x_i_0 - x_i_1))) / (func_xi0 - func_xi1);
 
@@ -449,24 +506,41 @@ void newton_raphson(int EQ_i, int iters, double percent, int stopping_condition)
                    root_error);
             break;
 
-//        case 6:
-//            //y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
-//            //dy/dx = (2.5/120*50000*30000*100)(-5x^4 + 6*100^2x^2 - 100^4)
-////            (w0 / E * I * L)
-//            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
-//                _6_func_xi1 = ((-1 * powl(x_i_1, 5)) + (2 * pow(L, 2) * powl(x_i_1, 3)) - pow(L, 4) * x_i_1);
-//                _6_dx_func_xi1 = ((-5 * powl(x_i_1, 4)) + (6 * pow(L, 2) * powl(x_i_1, 2)) - pow(L, 4));
-//                //Newton-Raphson equation.
-//                _6_x_i_2 = x_i_1 - (_6_func_xi1 / _6_dx_func_xi1);
-//
-//                root_error = fabsl(((_6_x_i_2 - x_i_1) / _6_x_i_2) * 100);
-//
-//                x_i_1 = x_i_2;
-//                i++;
-//            }
-//            printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
-//                   root_error);
-//            break;
+        case 4:
+            // f(x) = ln(x^4) - 0.7
+            // f'(x) = 4/x;
+            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
+                func_xi1 = log(pow(x_i_1, 4)) - 0.7;
+                dx_func_xi1 = 4.0 / x_i_1;
+                //Newton-Raphson equation.
+                x_i_2 = x_i_1 - (func_xi1 / dx_func_xi1);
+
+                root_error = fabs(((x_i_2 - x_i_1) / x_i_2) * 100);
+
+                x_i_1 = x_i_2;
+                i++;
+            }
+            printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
+                   root_error);
+            break;
+
+        case 5:
+            // f(x) = 7sin(x) - e^x
+            // f'(x) = 7cos(x) - e^x
+            while ((i < iters and stopping_condition == 1) or (root_error > percent and stopping_condition == 2)) {
+                func_xi1 = 7 * sin(x_i_1) - exp(x_i_1);
+                dx_func_xi1 = 7 * cos(x_i_1) - exp(x_i_1);
+                //Newton-Raphson equation.
+                x_i_2 = x_i_1 - (func_xi1 / dx_func_xi1);
+
+                root_error = fabs(((x_i_2 - x_i_1) / x_i_2) * 100);
+
+                x_i_1 = x_i_2;
+                i++;
+            }
+            printf("[Newton-Raphson] Method -> Xi2: %f | iterations: %d | relative error: %Lf%% \n", x_i_2, i,
+                   root_error);
+            break;
 
         default:
             std::cout << "Default" << std::endl;
