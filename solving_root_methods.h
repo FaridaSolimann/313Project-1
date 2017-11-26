@@ -173,11 +173,9 @@ void bisection(int equation, int iterations, float percent, int stopping_cond) {
 
             }
             //  y = (Wo/120EIL)(-x^5 + 2L^2x^3 - L^4x)
-            y = ((2.5) / (50000 * 30000 * 600 * 120) *
-                 ((-1.0 / 720000) * powl(_6_xr, 5) + powl(_6_xr, 3) - 180000 * _6_xr));
-            printf("[Bisection] Method -> Xr: %Lf | maximum deflection (y): %Lf | iterations: %d | relative error: %Lf%% \n",
-                   _6_xr, y, i,
-                   error);
+            y = ((2.5) / (50000 * 30000 * 600 * 120)) *
+                ((-1.0 / 720000) * powl(_6_xr, 5) + powl(_6_xr, 3) - (180000 * _6_xr));
+            printf("[Bisection] Method -> Xr: %Lf | iterations: %d | relative error: %Lf%% \n", _6_xr, i, error);
             break;
 
         default: //"5. 7 sin(x) = e^x "
